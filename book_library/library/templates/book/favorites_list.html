@@ -1,0 +1,61 @@
+{% extends "base.html" %} {% block content %}
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f5f5f5;
+		margin: 0;
+		padding: 0;
+	}
+
+	h2 {
+		color: #333;
+		margin-bottom: 20px;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0 0 0 20px;
+		margin: 0;
+	}
+
+	ul li {
+		padding: 10px 0;
+		border-bottom: 1px solid #ddd;
+	}
+
+	ul li:last-child {
+		border-bottom: none;
+	}
+
+	a {
+		text-decoration: none;
+		border-bottom: 2px solid #333;
+		color: #333;
+		font-weight: 700;
+	}
+
+	.remove_from {
+		color: red;
+		border: none;
+	}
+
+	p {
+		color: #555;
+	}
+</style>
+
+<h2>My list of favorites</h2>
+
+{% if favorites.exists %}
+<ul>
+	{% for favorite in favorites %}
+	<li>
+		<a href="{% url 'book_detail' favorite.book.id %}">{{ favorite.book.title }}</a>
+		<span> - {{ favorite.book.author }} | </span>
+		<a class="remove_from" href="{% url 'remove_from_favorites' favorite.book.id %}">Remove from favorites</a>
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>Your favorites list is empty.</p>
+{% endif %} {% endblock %}

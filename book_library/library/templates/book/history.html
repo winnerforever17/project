@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f5f5f5;
+		margin: 0;
+		padding: 0;
+	}
+
+	h2 {
+		color: #333;
+		margin-bottom: 20px;
+	}
+
+	ul {
+		list-style-type: none;
+        padding: 0 0 0 20px;
+	}
+
+	ul li {
+		padding: 10px 0;
+		border-bottom: 1px solid #ddd;
+		transition: background-color 0.3s;
+	}
+
+	ul li:last-child {
+		border-bottom: none;
+	}
+
+	a {
+		text-decoration: none;
+		color: red;
+		font-weight: 700;
+		margin-left: 10px;
+		transition: color 0.3s;
+	}
+
+	p {
+		color: #555;
+	}
+</style>
+<h2>History of books read</h2>
+{% if history.exists %}
+<ul>
+	{% for record in history %}
+	<li>
+		{{ record.book.title }} - Read: {{ record.read_date }} |
+		<a href="{% url 'remove_from_history' record.book.id %}">Remove from history</a>
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>Your book history is empty.</p>
+{% endif %} {% endblock %}

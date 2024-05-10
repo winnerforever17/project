@@ -1,0 +1,177 @@
+{% extends "base.html" %} {% block content %}
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f5f5f5;
+		margin: 0;
+		padding: 0;
+	}
+
+	.container {
+		max-width: 800px;
+		margin: 50px auto;
+		background-color: white;
+		border: 1px solid #ddd;
+		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	.description {
+		text-align: center;
+	}
+
+	h2 {
+		color: #333;
+	}
+
+	p {
+		color: #555;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	ul li {
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+	}
+
+	ul li:last-child {
+		border-bottom: none;
+	}
+
+	a {
+		text-decoration: none;
+		color: red;
+		font-weight: 700;
+		transition: color 0.3s;
+	}
+
+	a:hover {
+		color: #ff6347;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	form input,
+	form button {
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		margin-bottom: 10px;
+	}
+
+	.controls {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.controls a {
+		white-space: nowrap;
+		background-color: #333;
+		color: #fff;
+		border-radius: 4px;
+		font-weight: 700;
+		padding: 20px;
+	}
+
+	.reviews {
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	h3 {
+		color: #333;
+	}
+
+	.reviews form p textarea {
+		padding: 10px;
+		font-size: 16px;
+	}
+
+	.reviews form p select {
+		padding: 3px 10px;
+		font-size: 16px;
+	}
+
+	.reviews form button {
+		padding: 10px 30px;
+		font-size: 16px;
+		font-weight: 700;
+		background-color: #ff6347;
+		color: #fff;
+		transition: background-color 0.3s;
+		cursor: pointer;
+	}
+
+	.reviews button:hover {
+		background-color: #333;
+	}
+
+	.reviews form p:nth-child(2) {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-left: 25px;
+	}
+
+	.reviews form p:nth-child(3) {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		margin-left: 25px;
+	}
+</style>
+
+<div class="description">
+	<h2>{{ book.title }} - {{ book.author }}</h2>
+	<p>{{ book.description }}</p>
+</div>
+
+<h3>Відгуки</h3>
+<ul>
+	{% if reviews %} {% for review in reviews %}
+	<li>
+		<strong>{{ review.user.username }}</strong>: {{ review.rating }}/5
+		<p>{{ review.comment }}</p>
+		{% if user.is_authenticated and review.user == user %}
+		<a href="{% url 'delete_review' review.id %}" onclick="return confirm('Ви впевнені, що хочете видалити цей відгук?')">Remove review</a>
+		{% endif %}
+	</li>
+	{% endfor %} {% else %}
+	    <p>There are no reviews for this book!</p>
+	{% endif %}
+</ul>
+
+<div class="reviews">
+	<h3>Leave a review</h3>
+
+	<form method="POST">
+		{% csrf_token %} {{ form.as_p }}
+		<button type="submit">Send</button>
+	</form>
+</div>
+
+<div class="controls">
+	{% if is_favorited %}
+	    <a href="{% url 'remove_from_favorites' book.id %}">Remove from favorites</a>
+	{% else %}
+	    <a href="{% url 'add_to_favorites' book.id %}">Add to favorites</a>
+	{% endif %} {% if is_in_history %}
+        <a href="{% url 'remove_from_history' book.id %}">Delete from reading history</a>
+	{% else %}
+	    <a href="{% url 'mark_as_read' book.id %}">Add to reading history</a>
+	{% endif %}
+
+	<a href="{% url 'download_book_description' book.id %}" download>Download the description in PDF</a>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block content %}
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f5f5f5;
+		margin: 0;
+		padding: 0;
+	}
+
+	.book-list-container {
+		max-width: 800px;
+		margin: 50px auto;
+		padding: 20px;
+		background-color: #ffffff;
+		border: 1px solid #ddd;
+		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	h2 {
+		color: #333;
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	.genrechoose {
+		padding: 0px;
+		margin-bottom: 20px;
+	}
+
+	.genrechoose strong {
+		color: #2d2d2d;
+	}
+
+	a {
+		text-decoration: none;
+		color: #333;
+		transition: color 0.3s;
+		font-weight: 700;
+	}
+
+	a:hover {
+		color: #ff6347;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	ul li {
+		border-bottom: 1px solid #ddd;
+		padding: 10px 0;
+	}
+
+	ul li a {
+		border-bottom: 2px solid #333;
+	}
+
+	.genre {
+		margin: 0px 10px;
+	}
+</style>
+<h2>List of Books</h2>
+
+<div class="genrechoose">
+	<strong style="margin-right: 10px">Choose a genre:</strong>
+	<a href="{% url 'book_list' %}">All genres</a>
+	{% for genre in genres %}
+		<a class="genre" href="{% url 'book_list' %}?genre={{ genre }}">{{ genre }}</a>
+	{% endfor %}
+</div>
+
+<ul>
+	{% for book in books %}
+	<li>
+		<a href="{% url 'book_detail' book.id %}">{{ book.title }}</a> - {{book.author }}
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}
